@@ -2,12 +2,9 @@ import { WASocket } from "baileys";
 import { dedent } from 'ts-dedent';
 import { isJidGroup } from 'baileys'; 
 import { FormattedMessage } from "../utils/message.js";
-import { model } from "../utils/gemini.js";
+import { model } from "../services/gemini.js";
 import { Socket } from "dgram";
 import { expectationFailed } from "@hapi/boom";
-
-const umDia = 24 * 60 * 60 * 1000;
-
 
 interface UserState { // interface para o estado do usuario
     state: string;
@@ -16,8 +13,6 @@ interface UserState { // interface para o estado do usuario
 }
 
 const userStates: { [key: string]: UserState } = {};
-
-const ID_GROUP_SUPORTE = '120363196250059882@g.us'; // O ID do grupo
 
 async function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
