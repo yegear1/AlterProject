@@ -1,4 +1,4 @@
-class GroupMonitor {
+export class GroupMonitor {
     jid: string;
     nome: string;
     mensagensRecentes: Array<{ remetente: string, conteudo: string }>;
