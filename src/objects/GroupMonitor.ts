@@ -1,3 +1,15 @@
+async function sleep(ms: number, maxMs?: number): Promise<void> {
+    let sleepTime = ms;
+
+    // Se o segundo parâmetro (maxMs) foi passado, calcula um tempo aleatório
+    if (maxMs) {
+        sleepTime = ms + (Math.random() * (maxMs - ms));
+        console.log(`[SLEEP] Esperando por ${Math.round(sleepTime)}ms (entre ${ms}ms e ${maxMs}ms)`);
+    }
+
+    return new Promise((resolve) => setTimeout(resolve, sleepTime));
+}
+
 export class GroupMonitor {
     jid: string;
     nome: string;
@@ -37,12 +49,13 @@ export class GroupMonitor {
         if (message.key.remoteJid === this.jid && mencionados.includes(this.botJid)){
             const contexto = this.obterContexto();
             const prompt = `
-Você foi marcado no grupo "${this.nome}". Aqui está o contexto das últimas mensagens:\n${contexto}\n\nResponda de forma divertida ou relevante para esse grupo.
+Você foi marcado no grupo "${this.nome}". Aqui está o contexto das últimas mensagens:\n${contexto}\n\nResponda de forma engraçada, baseado no contexto informado ou relevante para esse grupo.
             `;
 
             const result = await this.model.generateContent(prompt);
             const resposta = result.response.text();
 
+            await sleep(3000,10000);
             await this.sock.sendMessage(this.jid, {
                 text: resposta,
                 quoted: message

@@ -1,4 +1,5 @@
 import { WASocket } from "baileys";
+import fs from 'fs';
 import { dedent } from 'ts-dedent';
 import { isJidGroup } from 'baileys'; 
 import { FormattedMessage } from "../utils/message.js";
@@ -6,16 +7,20 @@ import { model } from "../services/gemini.js";
 import { Socket } from "dgram";
 import { expectationFailed } from "@hapi/boom";
 import { GroupMonitor } from "../objects/GroupMonitor.js";
+import { logger } from "../utils/logger.js";
 
-interface UserState { // interface para o estado do usuario
-    state: string;
-    pausedUntil?: number; // Armazena o timestamp em milissegundos
-    debounceTimer?: NodeJS.Timeout;
+async function sleep(ms: number, maxMs?: number): Promise<void> {
+    let sleepTime = ms;
+
+    // Se o segundo parâmetro (maxMs) foi passado, calcula um tempo aleatório
+    if (maxMs) {
+        sleepTime = ms + (Math.random() * (maxMs - ms));
+        console.log(`[SLEEP] Esperando por ${Math.round(sleepTime)}ms (entre ${ms}ms e ${maxMs}ms)`);
+    }
+
+    return new Promise((resolve) => setTimeout(resolve, sleepTime));
 }
 
-async function sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 let todo_mundo:string = '120363123456789012@g.us';
 let outro_grupo:string = '120363123456789012@g.us';
@@ -26,20 +31,33 @@ const grupos = {
 //    '120363123456789999@g.us': new GroupMonitor('120363123456789999@g.us', 'Grupo 2', WASocket, model, outro_grupo)
 };
 
-// ID do grupo 120363196250059882@g.us
+const idsEncontrados = new Set();
+
 const MessageHandler = async (bot: WASocket, message: FormattedMessage) => {
     const groupId = message.key.remoteJid!;
-    if (isJidGroup(groupId)) { // Identificador
-        console.log(`\n \n--- ID DE GRUPO ENCONTRADO: ${groupId} ---\n \n`); 
-        return;
+
+    if (isJidGroup(groupId)) { // Salvar IDs de grupos
+        idsEncontrados.add(groupId)
+
+        const info = {
+            id: groupId,
+            tipo: groupId.endsWith('@g.us') ? 'grupo' : 'pessoa',
+            nome: message.pushName || 'Desconhecido',
+            timestamp: new Date().toISOString()
+        };
+
+        const arquivo = './ids_descobertos.json';
+        let dados = [];
+
+        if (fs.existsSync(arquivo)) {
+            dados = JSON.parse(fs.readFileSync(arquivo,'utf-8'))
+        }
+
+        dados.push(info);
+        fs.writeFileSync(arquivo, JSON.stringify(dados,null,2));
+
+        logger.info(`💾 Novo ID salvo: ${groupId}`);
     }
-
-    //if (message.key.fromMe) { // Ignorador de mensagens
-    //    return;
-   // }
-
-    const userId = message.key.remoteJid!;
-    //const userStateObject = userStates[userId] || { state: '' };
 
 }
 
