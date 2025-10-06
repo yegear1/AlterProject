@@ -3,6 +3,11 @@ auth
 *.auth
 auth/*
 
+#Whatsapp Web JS
+.wwebjs_auth
+.wwebjs_cache
+.wwebjs
+
 # Logs
 logs
 *.log

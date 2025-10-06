@@ -1,8 +1,10 @@
-import "dotenv/config";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import 'dotenv/config';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const apiKey = process.env.GEMINI_API_KEY;
-if (!apiKey) throw new Error("Chave GEMINI_API_KEY não encontrada no .env")
+if (!apiKey) {
+    throw new Error("Chave GEMINI_API_KEY não encontrada no .env")
+}
 
 const genAI = new GoogleGenerativeAI(apiKey);
 
