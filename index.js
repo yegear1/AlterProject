@@ -1,8 +1,12 @@
-require('dotenv').config();
-const { Client, LocalAuth } = require('whatsapp-web.js');
-const qrcode = require('qrcode-terminal');
-const messageHandler = require('./src/handlers/messageHandler');
-const { logInfo, logError, logSuccess } = require('./src/utils/logger');
+import 'dotenv/config';
+
+import pkg from 'whatsapp-web.js'
+const { Client, LocalAuth } = pkg;
+
+//import { Client, LocalAuth } from 'whatsapp-web.js';
+import qrcode from 'qrcode-terminal';
+import { messageHandler } from './src/handlers/messageHandler.js';
+import { logInfo, logError, logSuccess } from './src/utils/logger.js';
 
 
 // Configuração do cliente com LocalAuth para salvar sessão

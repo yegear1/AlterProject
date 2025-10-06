@@ -14,8 +14,8 @@ _Digite o comando desejado para executá-lo_
     await message.reply(helpText);
 }
 
-module.exports = {
+export const help = execute({
     name: 'help',
     description: 'Mostra todos os comandos disponíveis',
     execute:execute
-};
+})

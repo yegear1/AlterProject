@@ -1,11 +1,11 @@
-const pingCommand = require('../commands/ping');
-const helpCommand = require('../commands/help');
-const { logWarning, logInfo, logError, logSuccess } = require('../utils/logger');
+import { ping } from '../commands/ping.js';
+import { help } from '../commands/help.js';
+import { logWarning, logInfo, logError, logSuccess } from '../utils/logger.js';
 
 const commands = {
-    'ping': pingCommand,
-    'help': helpCommand,
-    'ajuda': helpCommand
+    'ping': ping.name,
+    'help': help.name,
+    'ajuda': help.name 
 }
 
 async function commandHandler(client, message) {
@@ -35,4 +35,4 @@ async function commandHandler(client, message) {
     }
 }
 
-module.exports = commandHandler;
+export { commandHandler };

@@ -27,9 +27,4 @@ const logWarning = (...args) => {
     console.warn(`${colors.yellow}[WARNING]${colors.reset} [${getTimestamp()}]`, ...args);
 };
 
-module.exports = {
-    logInfo,
-    logSuccess,
-    logError,
-    logWarning
-};
+export {logError, logInfo, logSuccess, logWarning};

@@ -25,3 +25,5 @@ async function getContext(chat, limit=10) {
         return null;
     };
 };
+
+export {getContext}

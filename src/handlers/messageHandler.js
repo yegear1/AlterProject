@@ -1,7 +1,8 @@
-import { logError, logInfo, logSuccess, logWarning} from '../utils/logger'
+import { logError, logInfo, logSuccess, logWarning } from '../utils/logger.js'
 
-import { commandHandler } from '../handlers/commandHandler'
-import { model } from '../config/gemini'
+import { commandHandler } from '../handlers/commandHandler.js'
+import { getContext } from '../utils/getContext.js'
+import { model } from '../config/gemini.js'
 
 
 function sleep(ms) {
@@ -30,7 +31,7 @@ async function messageHandler(client, message) {
         const wasMentioned = message.mentionedIds && message.mentionedIds.includes(botId);
 
         logInfo(`Mensagem de ${ chat.name }`)
-        logInfo(`Mensagem de ${contact.name || contact.pushname}: ${message.body}`);
+        logInfo(`Mensagem de ${ contact.name || contact.pushname}: ${message.body }`);
 
         // Verificar se é um comando
         const prefix = process.env.COMMAND_PREFIX || '!';
@@ -43,9 +44,10 @@ async function messageHandler(client, message) {
         if (wasMentioned) {
             logInfo(`🔔 Mencionado em: ${chat.isGroup ? chat.name : contact.pushname}`);
 
-            const context = await obter
+            const context = await getContext(chat, 10)
+            logInfo(`O contexto do grupo: ${context}`)
 
-            prompt = `Você foi marcado no grupo "${this.nome}". Aqui está o contexto das últimas mensagens:\n${context}\n\nResponda de forma engraçada, baseado no contexto informado ou relevante para esse grupo.`
+            prompt = `Você foi marcado no grupo "${this.chat.name}". Aqui está o contexto das últimas mensagens:\n${context}\n\nResponda de forma engraçada, baseado no contexto informado ou relevante para esse grupo.`
         };
 
     } catch (error) {
@@ -54,4 +56,4 @@ async function messageHandler(client, message) {
 
 };
 
-module.exports = messageHandler;
+export { messageHandler};

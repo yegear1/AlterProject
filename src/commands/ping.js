@@ -8,8 +8,8 @@ async function execute(client, message, args) {
     await message.reply(`⏱️ Latência: ${timeDiff}ms`);
 }
 
-module.exports = {
+export const ping = execute({
     name: 'ping',
     description: 'Responde com pong e mostra a latência',
     execute: execute
-};
+})
