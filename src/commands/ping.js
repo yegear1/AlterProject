@@ -1,11 +1,11 @@
 async function execute(client, message, args) {
     const startTime = Date.now();
-    const msg = await message.reply('🏓 Pong!');
+    await message.reply('🏓 Pong!');
     const endTime = Date.now();
 
     const timeDiff = endTime - startTime;
 
-    await msg.edit(`⏱️ Latência: ${timeDiff}ms`);
+    //await msg.edit(`⏱️ Latência: ${timeDiff}ms`);
     await message.reply(`⏱️ Latência: ${timeDiff}ms`);
 }
 

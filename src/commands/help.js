@@ -15,5 +15,5 @@ _Digite o comando desejado para executá-lo_
 export const help = ({
     name: 'help',
     description: 'Mostra todos os comandos disponíveis',
-    execute:execute
+    execute: execute
 })

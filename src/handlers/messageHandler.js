@@ -15,9 +15,9 @@ async function messageHandler(client, message) {
         sleep(1000);
 
         // Obter informações do contato e chat
-        const contact = await message.getContact();
+        const contact = await message.getContact(message);
         const chat = await message.getChat();
-        const botId = '@91968201838774';
+        const botId = "@558695416560"; // eu @91968201838774 eu tbm @558695416560
 
         // Ignorar mensagens de status e grupos (opcional)
         if (message.from === 'status@broadcast') return;
@@ -25,7 +25,7 @@ async function messageHandler(client, message) {
         //logInfo(`Mensagem de ${contact.name || contact.pushname}: ${message.body}`);
         
         // message.fromMe ||
-        if (message.fromMe || !message.body) return;
+        if (!message.body) return;
         
 
         if (chat.isGroup)  {
@@ -41,9 +41,12 @@ async function messageHandler(client, message) {
             return;
         };
 
-        var wasMentioned = false
-        if (message.mentionedIds.includes(botId)) {wasMentioned = true}
-        if (wasMentioned = true) {
+        var wasMentioned = false;
+        const msg = message.body.trim();
+        logInfo(`var msg: ${msg}`)
+        if (msg.includes("@91968201838774") || msg.includes(botId)){wasMentioned = true;}
+
+        if (wasMentioned === true) {
             logInfo(`🔔 Mencionado em: ${chat.isGroup ? chat.name : contact.pushname}`);
 
             const context = await getContext(chat, 10)
