@@ -52,10 +52,19 @@ async function messageHandler(client, message) {
             const context = await getContext(chat, 10)
             logInfo(`O contexto do grupo: ${context}`)
 
-            prompt = `Você foi marcado no grupo "${this.chat.name}". Aqui está o contexto das últimas mensagens:\n${context}\n\nResponda de forma engraçada, baseado no contexto informado ou relevante para esse grupo.`
-        
-            result = await model.generateContent(prompt);
+            let prompt = `Você foi marcado no grupo "${chat.name}". Aqui está o contexto das últimas mensagens:\n${context}\n\nResponda de forma engraçada, baseado no contexto informado ou relevante para esse grupo.`
+            
+            try {
+                let result = await model.generateContent(prompt);
+                let resposta = result.response.text()
+                
+                logInfo(`Resposta automatica gerada: ${resposta}`)
+                return resposta;
+            } catch (error) {
+                logError(`Erro ao gerar Resposta automatica: ${error}`)
+            }
 
+            await message.reply(resposta)
         };
 
     } catch (error) {
