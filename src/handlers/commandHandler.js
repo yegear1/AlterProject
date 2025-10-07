@@ -3,9 +3,9 @@ import { help } from '../commands/help.js';
 import { logWarning, logInfo, logError, logSuccess } from '../utils/logger.js';
 
 const commands = {
-    'ping': ping.name,
-    'help': help.name,
-    'ajuda': help.name 
+    'ping': ping,
+    'help': help, 
+    'ajuda': help
 }
 
 async function commandHandler(client, message) {
@@ -14,7 +14,7 @@ async function commandHandler(client, message) {
         const args = message.body.slice(prefix.length).trim().split(/ +/);
         const commandName = args.shift().toLowerCase();
 
-        logInfo(`Comando recebido dentro do Handle: ${commandName}`);
+        logInfo(`Comando recebido dentro do Handler: ${commandName}`);
 
         if (!commands[commandName]) {
             await message.reply(`❌ Comando não encontrado! Use ${prefix}help para ver os comandos disponíveis.`);

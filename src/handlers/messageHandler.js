@@ -17,7 +17,7 @@ async function messageHandler(client, message) {
         // Obter informações do contato e chat
         const contact = await message.getContact();
         const chat = await message.getChat();
-        const botId = client.info.wid._serialized;
+        const botId = '@91968201838774';
 
         // Ignorar mensagens de status e grupos (opcional)
         if (message.from === 'status@broadcast') return;
@@ -28,9 +28,9 @@ async function messageHandler(client, message) {
         if (message.fromMe || !message.body) return;
         
 
-        const wasMentioned = message.mentionedIds && message.mentionedIds.includes(botId);
-
-        logInfo(`Mensagem de ${ chat.name }`)
+        if (chat.isGroup)  {
+            logInfo(`Mensagem de ${ chat.name }`)
+        }
         logInfo(`Mensagem de ${ contact.name || contact.pushname}: ${message.body }`);
 
         // Verificar se é um comando
@@ -41,13 +41,18 @@ async function messageHandler(client, message) {
             return;
         };
 
-        if (wasMentioned) {
+        var wasMentioned = false
+        if (message.mentionedIds.includes(botId)) {wasMentioned = true}
+        if (wasMentioned = true) {
             logInfo(`🔔 Mencionado em: ${chat.isGroup ? chat.name : contact.pushname}`);
 
             const context = await getContext(chat, 10)
             logInfo(`O contexto do grupo: ${context}`)
 
             prompt = `Você foi marcado no grupo "${this.chat.name}". Aqui está o contexto das últimas mensagens:\n${context}\n\nResponda de forma engraçada, baseado no contexto informado ou relevante para esse grupo.`
+        
+            result = await model.generateContent(prompt);
+
         };
 
     } catch (error) {

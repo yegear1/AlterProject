@@ -1,6 +1,4 @@
 async function execute(client, message, args) {
-    const prefix = process.env.COMMAND_PREFIX || '!';
-    
     const helpText = `
 📋 *COMANDOS DISPONÍVEIS*
 
@@ -11,10 +9,10 @@ ${prefix}ajuda - Mesma função do help
 _Digite o comando desejado para executá-lo_
     `.trim();
     
-    await message.reply(helpText);
+    await message.reply('',helpText);
 }
 
-export const help = execute({
+export const help = ({
     name: 'help',
     description: 'Mostra todos os comandos disponíveis',
     execute:execute
