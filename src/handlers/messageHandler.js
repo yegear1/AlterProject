@@ -29,7 +29,8 @@ async function messageHandler(client, message) {
         
 
         if (chat.isGroup)  {
-            logInfo(`Mensagem de ${ chat.name }`)
+            logInfo(`Mensagem de ${ chat.name }\nID: ${ chat.id }`)
+            logInfo(Object.keys(chat.id));
         }
         logInfo(`Mensagem de ${ contact.name || contact.pushname}: ${message.body }`);
 
@@ -41,30 +42,34 @@ async function messageHandler(client, message) {
             return;
         };
 
-        var wasMentioned = false;
+        let wasMentioned = false;
         const msg = message.body.trim();
-        logInfo(`var msg: ${msg}`)
         if (msg.includes("@91968201838774") || msg.includes(botId)){wasMentioned = true;}
 
         if (wasMentioned === true) {
             logInfo(`🔔 Mencionado em: ${chat.isGroup ? chat.name : contact.pushname}`);
 
-            const context = await getContext(chat, 10)
-            logInfo(`O contexto do grupo: ${context}`)
+            const context = await getContext(chat, 10);
+            logInfo(`O contexto do grupo: ${context}`);
 
-            let prompt = `Você foi marcado no grupo "${chat.name}". Aqui está o contexto das últimas mensagens:\n${context}\n\nResponda de forma engraçada, baseado no contexto informado ou relevante para esse grupo.`
-            
+            let prompt = `Você foi marcado no grupo "${chat.name}". Aqui está o contexto das últimas mensagens:\n${context}\n\nVocê esta se passando como o dono desse contato, Yegear, e está respondendo diretamente como se fosse ele, então crie um texto que faça sentido como uma pessoa comum.`
+            let ansnwer;
+
+
             try {
-                let result = await model.generateContent(prompt);
-                let resposta = result.response.text()
+                const result = await model.generateContent(prompt);
+                ansnwer = result.response.text();
                 
-                logInfo(`Resposta automatica gerada: ${resposta}`)
-                return resposta;
+                logInfo(`Resposta automatica gerada: ${ansnwer}`);
             } catch (error) {
-                logError(`Erro ao gerar Resposta automatica: ${error}`)
-            }
+                logError(`Erro ao gerar Resposta automatica: ${error}`);
+                ansnwer = "avisa";
+            };
 
-            await message.reply(resposta)
+            if (ansnwer){
+                await message.reply(ansnwer);
+            };
+
         };
 
     } catch (error) {
