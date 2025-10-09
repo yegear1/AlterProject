@@ -1,10 +1,10 @@
 import { logInfo } from "./logger.js";
 
 async function getContext(chat, limit=10) {
-    logInfo('--- INSPECIONANDO O OBJETO "chat" ---');
-    logInfo(chat);
-    logInfo('--- MÉTODOS E PROPRIEDADES DISPONÍVEIS ---');
-    logInfo(Object.keys(chat));
+    //logInfo('--- INSPECIONANDO O OBJETO "chat" ---');
+    //logInfo(chat);
+    //logInfo('--- MÉTODOS E PROPRIEDADES DISPONÍVEIS ---');
+    //logInfo(Object.keys(chat));
 
     try {
         let mensagens = await chat.fetchMessages({ limit: limit, fromMe:false});

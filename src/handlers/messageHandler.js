@@ -1,7 +1,6 @@
 import { logError, logInfo, logSuccess, logWarning } from '../utils/logger.js'
-
 import { commandHandler } from '../handlers/commandHandler.js'
-import { getContext } from '../utils/getContext.js'
+import { AutomaticAnswer } from '../services/AutomaticAnswer.js';
 import { model } from '../config/gemini.js'
 
 
@@ -12,12 +11,13 @@ function sleep(ms) {
 
 async function messageHandler(client, message) {
     try{
-        sleep(1000);
+        await sleep(1000);
 
-        // Obter informações do contato e chat
+        // Informacoes do Contato
         const contact = await message.getContact(message);
+        const autorId = contact.id._serialized
+
         const chat = await message.getChat();
-        const botId = "@558695416560"; // eu @91968201838774 eu tbm @558695416560
 
         // Ignorar mensagens de status e grupos (opcional)
         if (message.from === 'status@broadcast') return;
@@ -29,10 +29,19 @@ async function messageHandler(client, message) {
         
 
         if (chat.isGroup)  {
-            logInfo(`Mensagem de ${ chat.name }\nID: ${ chat.id }`)
-            logInfo(Object.keys(chat.id));
+            const groupId = chat.id._serialized;
+            logInfo(
+                `-- Mensagem em Grupo --\n` +
+                `Grupo: ${chat.name} | ID: ${groupId}\n` +
+                `Autor: ${contact.pushname || contact.name} | ID: ${autorId}`
+            )
+        } else {
+            logInfo(
+                `-- Mensagem Privada --\n`+
+                `De: ${contact.pushname || contact.name} | ID: ${autorId}`
+            );
         }
-        logInfo(`Mensagem de ${ contact.name || contact.pushname}: ${message.body }`);
+        logInfo(`Conteúdo: ${message.body}\n--------------------`);
 
         // Verificar se é um comando
         const prefix = process.env.COMMAND_PREFIX || '!';
@@ -42,40 +51,12 @@ async function messageHandler(client, message) {
             return;
         };
 
-        let wasMentioned = false;
-        const msg = message.body.trim();
-        if (msg.includes("@91968201838774") || msg.includes(botId)){wasMentioned = true;}
-
-        if (wasMentioned === true) {
-            logInfo(`🔔 Mencionado em: ${chat.isGroup ? chat.name : contact.pushname}`);
-
-            const context = await getContext(chat, 10);
-            logInfo(`O contexto do grupo: ${context}`);
-
-            let prompt = `Você foi marcado no grupo "${chat.name}". Aqui está o contexto das últimas mensagens:\n${context}\n\nVocê esta se passando como o dono desse contato, Yegear, e está respondendo diretamente como se fosse ele, então crie um texto que faça sentido como uma pessoa comum.`
-            let ansnwer;
-
-
-            try {
-                const result = await model.generateContent(prompt);
-                ansnwer = result.response.text();
-                
-                logInfo(`Resposta automatica gerada: ${ansnwer}`);
-            } catch (error) {
-                logError(`Erro ao gerar Resposta automatica: ${error}`);
-                ansnwer = "avisa";
-            };
-
-            if (ansnwer){
-                await message.reply(ansnwer);
-            };
-
-        };
+        AutomaticAnswer(message, chat)
 
     } catch (error) {
-        console.error('Erro ao processar mensagem:', error );
+        logError('Erro ao processar mensagem:', error );
     };
 
 };
 
-export { messageHandler};
+export { messageHandler };
