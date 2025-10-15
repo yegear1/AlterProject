@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "ativo": true,
+    "pessoa": {
+      "nome": "Luis",
+      "telefone": "558698098493@c.us"
+    },
+    "valor": 150.50,
+    "frequencia": "mensal",
+    "dia": 15
+  }
+]

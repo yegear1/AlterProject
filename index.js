@@ -7,6 +7,7 @@ const { Client, LocalAuth } = pkg;
 import qrcode from 'qrcode-terminal';
 import { messageHandler } from './src/handlers/messageHandler.js';
 import { logInfo, logError, logSuccess } from './src/utils/logger.js';
+import { qrcodeGen } from './src/utils/qrcodeGen.js';
 
 
 // Configuração do cliente com LocalAuth para salvar sessão
@@ -66,7 +67,8 @@ client.on('loading_screen', (percent, message) => {
     logInfo(`Carregando... ${percent}% - ${message}`);
 });
 
-client.initialize();
+qrcodeGen(10);
+//client.initialize();
 
 process.on('unhandledRejection', (error) => {
     logError('Unhandled Rejection:', error);
