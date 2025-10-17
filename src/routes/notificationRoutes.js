@@ -1,5 +1,5 @@
 import express from 'express'
-import { logError } from '../utils/logger';
+import { logError, logInfo, logSuccess, logWarning } from '../utils/logger.js'
 import { error } from 'qrcode-terminal';
 
 function createNotificationsRoutes(client) {
