@@ -1,0 +1,27 @@
+# Dependências locais, serão instaladas dentro do container
+node_modules
+
+# Arquivos de sessão e cache do wwebjs. Serão gerenciados por Volumes.
+.wwebjs_auth/
+.wwebjs_cache/
+
+# Arquivo de variáveis de ambiente. Será injetado pelo Docker Compose.
+.env
+
+# Logs e arquivos de debug
+npm-debug.log
+*.log
+
+# Arquivos de configuração de IDE e sistema
+.vscode/
+.idea/
+.DS_Store
+
+# Arquivos do Git
+.git
+.gitignore
+.gitattributes
+
+# Arquivos de documentação e licença que não são necessários para rodar a aplicação
+README.md
+LICENSE

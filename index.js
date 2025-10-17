@@ -1,13 +1,15 @@
-import 'dotenv/config';
-
 import pkg from 'whatsapp-web.js'
 const { Client, LocalAuth } = pkg;
 
 //import { Client, LocalAuth } from 'whatsapp-web.js';
 import qrcode from 'qrcode-terminal';
+import express from 'express';
+import 'dotenv/config';
+
 import { messageHandler } from './src/handlers/messageHandler.js';
 import { logInfo, logError, logSuccess } from './src/utils/logger.js';
 import { qrcodeGen } from './src/utils/qrcodeGen.js';
+import { createNotificationsRoutes } from './src/routes/notificationRoutes.js';
 
 
 // Configuração do cliente com LocalAuth para salvar sessão
@@ -67,9 +69,22 @@ client.on('loading_screen', (percent, message) => {
     logInfo(`Carregando... ${percent}% - ${message}`);
 });
 
-qrcodeGen(10);
-//client.initialize();
+client.initialize();
 
 process.on('unhandledRejection', (error) => {
     logError('Unhandled Rejection:', error);
 });
+
+// --- CONFIGURAÇÃO DA API EXPRESS ---
+const app = express();
+const PORTA_API  = process.env.PORTA_API;
+
+app.use(express.json());
+
+const notificationRouter = createNotificationsRoutes(client, logInfo, logError);
+
+app.use('/notificar', notificationRouter);
+
+app.listen(PORTA_API, () => {
+    logInfo(`API de notificacoes ouvindo na porta ${PORTA_API}`)
+})

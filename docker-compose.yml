@@ -1,0 +1,31 @@
+services:
+  # Nome do nosso serviço principal
+  whatsapp-bot:
+    # Nome do container para fácil identificação
+    container_name: whatsapp-bot-service
+    
+    # Constrói a imagem a partir do Dockerfile no diretório atual ('.')
+    build: .
+    
+    # Sempre reinicia o container a menos que seja parado manualmente
+    restart: unless-stopped
+    
+    # Carrega as variáveis de ambiente do arquivo .env
+    env_file:
+      - .env
+      
+    # Mapeamento de Volumes (ESSENCIAL)
+    # Garante que os dados de login, cache e cobranças persistam
+    volumes:
+      # Persiste a sessão de login do WhatsApp
+      - ./wwebjs_auth:/app/.wwebjs_auth
+      # Persiste o cache do wwebjs
+      - ./wwebjs_cache:/app/.wwebjs_cache
+      # Mapeia o arquivo de cobranças para que você possa editá-lo
+      # externamente sem precisar reconstruir a imagem.
+      - ./cobrancas.json:/app/cobrancas.json
+      
+    # Mapeamento de Portas (se a sua API precisar ser acessada de fora)
+    # Formato: 'PORTA_DO_SEU_PC:PORTA_DO_CONTAINER'
+    ports:
+      - "3000:3000" # Mapeia a porta 3000 do container para a porta 3000 do seu PC
