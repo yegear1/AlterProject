@@ -51,8 +51,6 @@ async function messageHandler(client, message) {
             return;
         };
 
-        if (mess)
-
         AutomaticAnswer(message, chat)
 
     } catch (error) {
