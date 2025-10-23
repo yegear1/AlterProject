@@ -1,3 +1,5 @@
+import { logError, logInfo, logSuccess, logWarning } from '../utils/logger.js'
+
 import { getContext } from '../utils/getContext.js'
 
 const botId = "@558695416560"; // eu @91968201838774 eu tbm @558695416560

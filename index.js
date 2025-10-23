@@ -1,7 +1,6 @@
 import pkg from 'whatsapp-web.js'
 const { Client, LocalAuth } = pkg;
 
-//import { Client, LocalAuth } from 'whatsapp-web.js';
 import qrcode from 'qrcode-terminal';
 import express from 'express';
 import cron from 'node-cron'
@@ -11,7 +10,6 @@ import { createNotificationsRoutes } from './src/routes/notificationRoutes.js';
 import { logInfo, logError, logSuccess } from './src/utils/logger.js';
 import { messageHandler } from './src/handlers/messageHandler.js';
 import { billColector } from './src/services/billCollector.js';
-import { qrcodeGen } from './src/utils/qrcodeGen.js';
 
 
 // Configuração do cliente com LocalAuth para salvar sessão
@@ -21,7 +19,7 @@ const client = new Client({
         dataPath: './.wwebjs_auth'
     }),
     puppeteer: {
-        headless: true,
+        headless: 'new',
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -55,7 +53,7 @@ client.on('ready', () => {
     logSuccess('Cliente está pronto para usar!');
     logInfo('Bot conectado e aguardando mensagens...');
 
-    billSchedule()
+    billSchedule(client)
 });
 
 // Evento: Cliente desconectado
@@ -81,15 +79,14 @@ process.on('unhandledRejection', (error) => {
 
 // --- CONFIGURAÇÃO DA API EXPRESS ---
 const app = express();
-const PORTA_API  = process.env.PORTA_API;
 
 app.use(express.json());
 
 const notificationRouter = createNotificationsRoutes(client);
 app.use('/notificar', notificationRouter);
 
-app.listen(PORTA_API, () => {
-    logInfo(`API de notificacoes ouvindo na porta ${PORTA_API}`)
+app.listen(process.env.PORTA_API, () => {
+    logInfo(`API de notificacoes ouvindo na porta ${process.env.PORTA_API}`)
 })
 
 
@@ -104,5 +101,3 @@ function billSchedule(client) {
 
     logInfo(`Agendador de cobrancas iniciado. Verificacao diaria as 9:00`)
 }
-
-billSchedule(client)

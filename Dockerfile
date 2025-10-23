@@ -1,22 +1,54 @@
-# Etapa 1: Imagem Base
-# Usamos a versão 20 do Node.js com Alpine Linux, que é leve e segura.
-FROM node:20-alpine
+FROM node:20-slim
 
-# Etapa 2: Diretório de Trabalho
-# Define o diretório padrão dentro do container.
+ARG UID=1000
+ARG GID=1000
+
+USER root
+
+ENV TZ=America/Sao_Paulo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt-get update && apt-get install -y \
+  chromium \
+  wget \
+  gnupg \
+  ca-certificates \
+  fonts-liberation \
+  libasound2 \
+  libatk-bridge2.0-0 \
+  libatk1.0-0 \
+  libcups2 \
+  libdbus-1-3 \
+  libdrm2 \
+  libgbm1 \
+  libgtk-3-0 \
+  libnspr4 \
+  libnss3 \
+  libx11-xcb1 \
+  libxcomposite1 \
+  libxdamage1 \
+  libxrandr2 \
+  xdg-utils \
+  --no-install-recommends && \
+  rm -rf /var/lib/apt/lists/*
+
+RUN if [ "$UID" != "1000" ] || [ "$GID" != "1000" ]; then \
+        groupmod -g $GID node && \
+        usermod -u $UID -g $GID node; \
+    fi
+
 WORKDIR /app
 
-# Etapa 3: Instalação de Dependências
-# Copia primeiro os arquivos de manifesto para aproveitar o cache do Docker.
 COPY package*.json ./
-# Instala apenas as dependências de produção de forma otimizada.
 RUN npm ci --only=production
 
-# Etapa 4: Copiar o Código-Fonte
-# Copia todo o resto do seu projeto para o diretório /app.
-# O .dockerignore garante que arquivos desnecessários não sejam copiados.
-COPY . .
+COPY --chown=node:node . .
 
-# Etapa 5: Comando de Execução
-# Define o comando para iniciar o bot quando o container for executado.
+RUN mkdir -p /app/.wwebjs_auth /app/.wwebjs_cache && \
+    chown -R node:node /app
+
+EXPOSE 3000
+
+USER node
+
 CMD ["node", "index.js"]

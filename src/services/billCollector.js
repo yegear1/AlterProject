@@ -24,6 +24,7 @@ async function billColector( client ) {
             } else if (bill.frequency === 'semanal' && diaDaSemana  === bill.dia ){
                 deveCobrar = true;
             }
+            logInfo(`${bill.pessoa.nome} ${deveCobrar}`);
 
             if (deveCobrar) {
                 logInfo(`Gerando cobranca para ${bill.pessoa.nome}`)
@@ -43,6 +44,7 @@ async function billColector( client ) {
     } catch ( error ) {
         logError(`Erro ao processar arquivo de cobrancas: ${error}`)
     };
+    logInfo('Terminado exeucao de billColector');
 };
 
 function billSchedule() {
@@ -51,7 +53,7 @@ function billSchedule() {
         timezone: "America/Sao_Paulo"
     });
 
-    logInfo(`Agendador de cobrancas iniciado. Verificacao diaria as 9:00`)
+    logInfo(`Agendador de cobrancas iniciado. Verificacao diaria as 11:55`)
 }
 
 export { billSchedule, billColector }

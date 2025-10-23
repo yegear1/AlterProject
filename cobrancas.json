@@ -1,5 +1,5 @@
 [
-  {
+  { 
     "id": 1,
     "ativo": true,
     "pessoa": {
@@ -9,5 +9,16 @@
     "valor": 10.5,
     "frequencia": "mensal",
     "dia": 18
+  },
+  { 
+    "id": 2,
+    "ativo": true,
+    "pessoa": {
+      "nome": "Ezreal",
+      "telefone": "558688283077@c.us"
+    },
+    "valor": 5,
+    "frequencia": "semanal",
+    "dia": 4
   }
 ]
