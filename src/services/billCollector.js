@@ -47,13 +47,16 @@ async function billColector( client ) {
     logInfo('Terminado exeucao de billColector');
 };
 
-function billSchedule() {
-    cron.schedule('0 8 * * *', billColector, {
+function billSchedule(client) {
+    cron.schedule('0 10 * * *', () => {
+        logInfo('Horario de cobrança atingido. Executando o coletor...');
+        billColector(client);
+    }, {
         scheduled: true,
         timezone: "America/Sao_Paulo"
     });
 
-    logInfo(`Agendador de cobrancas iniciado. Verificacao diaria as 11:55`)
+    logInfo(`Agendador de cobrancas iniciado. Verificacao diaria as 10:00`)
 }
 
 export { billSchedule, billColector }

@@ -9,7 +9,7 @@ import 'dotenv/config';
 import { createNotificationsRoutes } from './src/routes/notificationRoutes.js';
 import { logInfo, logError, logSuccess } from './src/utils/logger.js';
 import { messageHandler } from './src/handlers/messageHandler.js';
-import { billColector } from './src/services/billCollector.js';
+import { billSchedule } from './src/services/billCollector.js';
 
 
 // Configuração do cliente com LocalAuth para salvar sessão
@@ -88,16 +88,3 @@ app.use('/notificar', notificationRouter);
 app.listen(process.env.PORTA_API, () => {
     logInfo(`API de notificacoes ouvindo na porta ${process.env.PORTA_API}`)
 })
-
-
-function billSchedule(client) {
-    cron.schedule('0 8 * * *', () => {
-        logInfo('HorArio de cobrança atingido. Executando o coletor...');
-        billColector(client);
-    }, {
-        scheduled: true,
-        timezone: "America/Sao_Paulo"
-    });
-
-    logInfo(`Agendador de cobrancas iniciado. Verificacao diaria as 9:00`)
-}

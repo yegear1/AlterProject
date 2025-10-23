@@ -1,5 +1,5 @@
 import { logError, logInfo, logSuccess, logWarning } from '../utils/logger.js'
-
+import { model } from '../config/gemini.js';
 import { getContext } from '../utils/getContext.js'
 
 const botId = "@558695416560"; // eu @91968201838774 eu tbm @558695416560
@@ -24,7 +24,7 @@ async function AutomaticAnswer(message, chat) {
         const context = await getContext(chat, 10);
         logInfo(`O contexto do grupo: ${context}`);
 
-        let prompt = `Você foi marcado no grupo "${chat.name}". Aqui está o contexto das últimas mensagens:\n${context}\n\nVocê esta se passando como o dono desse contato, Yegear, e está respondendo diretamente como se fosse ele, então crie um texto que faça sentido como uma pessoa comum.`
+        let prompt = `Você foi marcado no grupo "${chat.name}". Aqui está o contexto das últimas mensagens:\n${context}\n\nVocê esta se passando como o dono desse contato, Yegear, e está respondendo diretamente como se fosse ele, usando uma resposta curta e ironica, e use o sufixo 'zudo' no final de algumas palavras`
         let ansnwer;
 
         try {
