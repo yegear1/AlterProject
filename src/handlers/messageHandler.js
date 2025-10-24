@@ -11,7 +11,6 @@ function sleep(ms) {
 async function messageHandler(client, message) {
     //console.log(message);
 
-
     try{
         await sleep(1000);
 

@@ -1,11 +1,13 @@
+import { logWarning, logInfo, logError, logSuccess } from '../utils/logger.js';
+
 import { ping } from '../commands/ping.js';
 import { help } from '../commands/help.js';
-import { logWarning, logInfo, logError, logSuccess } from '../utils/logger.js';
+import { gpt } from '../commands/gpt.js';
 
 const commands = {
     'ping': ping,
-    'help': help, 
-    'ajuda': help
+    'help': help,
+    'gpt': gpt
 }
 
 async function commandHandler(client, message) {
